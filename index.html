@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Nepal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <div class="splash-content">
+            <h1>Study Nepal</h1>
+            <p>Your Ultimate Learning Companion</p>
+        </div>
+    </div>
+
+    <!-- Main Page -->
+    <div id="main-page" style="display:none;">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="text">
+<h3>Study Nepal</h3>            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="chat/index.html">Chat</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </nav>
+
+     <!-- Mobile Navigation Bar -->
+     <div class="mobile-nav">
+        <a href="index.html" class="nav-icon" title="Home">&#8962;</a>
+        <a href="chat/index.html" class="nav-icon" title="Chat">&#128172;</a>
+        <a href="about.html" class="nav-icon" title="About">&#9881;</a>
+    </div>
+
+        <!-- Chat Section -->
+        <section id="chat" class="chat-section">
+            <iframe 
+                id="chat-frame" 
+                src="https://cdn.botpress.cloud/webchat/v2.2/shareable.html?configUrl=https://files.bpcontent.cloud/2024/12/16/06/20241216064028-9BXRQXH9.json" 
+                style="width: 100%; height: 600px; border: none;">
+            </iframe>
+        </section>
+
+        <!-- Resources Section -->
+        <section id="resources" class="resources-section">
+            <h2>Resources</h2>
+            <div class="resources-grid">
+                <div class="resource-card" onclick="openDetailPage('ebook/index.html')">
+                    <h3>E-Books</h3>
+                    <p>Browse and download study materials.</p>
+                </div>
+                <div class="resource-card" onclick="openDetailPage('guide/index.html')">
+                    <h3>Guides</h3>
+                    <p>Comprehensive subject guides for students.</p>
+                </div>
+                <div class="resource-card" onclick="openDetailPage('specifications/index.html')">
+                    <h3>Specification Grid</h3>
+                    <p>Detailed educational specifications.</p>
+                </div>
+                <div class="resource-card" onclick="openDetailPage('curriculum/index.html')">
+                    <h3>Curriculum</h3>
+                    <p>Explore your curriculum in detail.</p>
+                </div>
+            </div>
+            <script>
+                function openDetailPage(page) {
+                    window.location.href = page; // Navigate to the specified file
+                }
+            </script>            
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features-section">
+            <h2>Features</h2>
+            <div class="features-grid">
+                <div class="feature-card" onclick="openDetailPage('general knowledge/index.html')">
+                    <h3>Wikipedia Search</h3>
+                    <p>Explore resources for learning and knowledge enhancement.</p>
+                </div>
+                <div class="feature-card" onclick="openDetailPage('Science/index.html')">
+                    <h3>Science</h3>
+                    <p>Discover space and science-related materials for students.</p>
+                </div>
+                <div class="feature-card" onclick="openDetailPage('chat/index.html')">
+                    <h3>Mathematics</h3>
+                    <p>Explore resources and tools to enhance your math skills.</p>
+                </div>
+                <div class="feature-card" onclick="openDetailPage('chat/index.html')">
+                    <h3>Physics</h3>
+                    <p>Delve into the world of physics concepts and experiments.</p>
+                </div>
+                <div class="feature-card" onclick="openDetailPage('chat/index.html')">
+                    <h3>Chemistry</h3>
+                    <p>Learn about chemical reactions, compounds, and more.</p>
+                </div>
+                <div class="feature-card" onclick="openDetailPage('chat/index.html')">
+                    <h3>Biology</h3>
+                    <p>Understand the living world, from cells to ecosystems.</p>
+                </div>
+            </div>
+            <script>
+                function openDetailPage(page) {
+                    window.location.href = page; // Navigate to the specified file
+                }
+            </script>
+        </section>
+    </div>
+
+    <script>
+        // Splash screen timeout
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
+                document.getElementById('splash-screen').style.display = 'none';
+                document.getElementById('main-page').style.display = 'block';
+            }, 3000); // 3 seconds
+        });
+    </script>
+
+    
+</body>
+</html>
