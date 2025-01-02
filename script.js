@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', function () {
+ // Splash screen timeout
+ document.addEventListener('DOMContentLoaded', function () {
     const splashScreen = document.getElementById('splash-screen');
     const mainPage = document.getElementById('main-page');
 
@@ -22,33 +23,56 @@ document.addEventListener('DOMContentLoaded', function () {
         splashScreen.style.display = 'none';
         mainPage.style.display = 'block';
     }
-
-    // Function to open detail pages
-    window.openDetailPage = function (page) {
-        window.location.href = page; // Navigate to the specified file
-    };
-
-    // Botpress iframe resizing logic
-    const chatFrame = document.getElementById('chat-frame');
-    function resizeChatFrame() {
-        // Adjust the height of the iframe based on the window size
-        if (chatFrame) {
-            chatFrame.style.height = `${window.innerHeight - 100}px`;
-        }
-    }
-
-    // Add an event listener to handle window resizing
-    window.addEventListener('resize', resizeChatFrame);
-
-    // Initial resizing
-    resizeChatFrame();
-
-    // Ensure links open in PDF viewer
-    document.addEventListener('click', function (event) {
-        if (event.target.tagName === 'A' && event.target.href) {
-            event.preventDefault(); // Prevent default browser behavior
-            const targetURL = event.target.href;
-            window.location.href = `PDFVIEWER.html?file=${encodeURIComponent(targetURL)}`;
-        }
-    });
 });
+
+// Function to open detail pages
+function openDetailPage(page) {
+    window.location.href = page; // Navigate to the specified file
+}
+
+// Chat functionality
+document.getElementById('send-button').addEventListener('click', sendMessage);
+document.getElementById('user-input').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
+});
+
+function sendMessage() {
+    const userInput = document.getElementById('user-input').value;
+    if (userInput.trim() === '') return;
+
+    addMessage(userInput, 'user-message');
+    document.getElementById('user-input').value = '';
+
+    fetchReply(userInput);
+}
+
+function addMessage(text, className) {
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message', className);
+    messageElement.textContent = text;
+    document.getElementById('messages').appendChild(messageElement);
+    document.getElementById('chatbox').scrollTop = document.getElementById('chatbox').scrollHeight;
+}
+
+async function fetchReply(userInput) {
+    const apiKey = "AIzaSyACXlYkQ81Q7LVKe9dEqiyDQXJ0NfksBtk";
+    const apiUrl = `https://gemini.googleapis.com/v1/chat:complete?key=${apiKey}`;
+
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            prompt: userInput,
+            temperature: 0.7,
+            max_tokens: 150,
+        }),
+    });
+
+    const data = await response.json();
+    const botReply = data.choices[0].text.trim();
+    addMessage(botReply, 'bot-message');
+}
