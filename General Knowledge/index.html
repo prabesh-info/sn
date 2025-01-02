@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wikipedia Search</title>
+    <style>
+        
+/* Remove blue touch overlay and focus outline */
+button, input, textarea, a, div {
+    outline: none; /* Remove outline for focus */
+    -webkit-tap-highlight-color: transparent; /* Remove blue highlight */
+    -webkit-touch-callout: none; /* Prevent callout (iOS long press) */
+    user-select: none; /* Prevent text selection */
+}
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #ffffff;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #1e1e1e;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+        }
+        h1 {
+            text-align: center;
+            color: #00d4ff;
+        }
+        .search {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .search input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 8px 0 0 8px;
+            outline: none;
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+        .search button {
+            padding: 10px 20px;
+            background-color: #00d4ff;
+            color: white;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .search button:hover {
+            background-color: #007acc;
+            transform: scale(1.05);
+        }
+        .results {
+            list-style: none;
+            padding: 0;
+        }
+        .results li {
+            margin-bottom: 15px;
+            padding: 15px;
+            border: 1px solid #333;
+            border-radius: 12px;
+            background: #222;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out;
+        }
+        .results li:hover {
+            transform: translateY(-5px);
+        }
+        .results a {
+            text-decoration: none;
+            color: #00d4ff;
+        }
+        .results a:hover {
+            text-decoration: underline;
+        }
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            .search button {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Wikipedia Search</h1>
+        <div class="search">
+            <input type="text" id="searchInput" placeholder="Enter a search term...">
+            <button onclick="searchWikipedia()">Search</button>
+        </div>
+        <ul class="results" id="results"></ul>
+    </div>
+
+    <script>
+        async function searchWikipedia() {
+            const query = document.getElementById('searchInput').value;
+            const resultsContainer = document.getElementById('results');
+
+            // Clear previous results
+            resultsContainer.innerHTML = '';
+
+            if (!query.trim()) {
+                resultsContainer.innerHTML = '<li>Please enter a valid search term.</li>';
+                return;
+            }
+
+            const endpoint = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&origin=*`;
+
+            try {
+                const response = await fetch(endpoint);
+                const data = await response.json();
+
+                if (data.query.search.length === 0) {
+                    resultsContainer.innerHTML = '<li>No results found.</li>';
+                    return;
+                }
+
+                // Display search results
+                data.query.search.forEach((result) => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <h3>${result.title}</h3>
+                        <p>${result.snippet}...</p>
+                        <a href="#" onclick="openInApp('${encodeURIComponent(result.title)}')">Read more</a>
+                    `;
+                    resultsContainer.appendChild(listItem);
+                });
+            } catch (error) {
+                resultsContainer.innerHTML = '<li>Error fetching data. Please try again later.</li>';
+                console.error('Error:', error);
+            }
+        }
+
+        function openInApp(title) {
+            const articleURL = `https://en.wikipedia.org/wiki/${title}`;
+            window.location.href = `url.html?article=${title}`;
+        }
+    </script>
+</body>
+</html>

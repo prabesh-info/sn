@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Settings</title>
+    <style>
+        /* General Body Styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #121212;
+            color: #f0f0f0;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #1e1e1e;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1e90ff;
+            text-decoration: none;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar ul li {
+            display: inline;
+        }
+
+        .navbar ul li a {
+            color: #f0f0f0;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        .navbar ul li a:hover {
+            color: #1e90ff;
+        }
+
+        /* About Section */
+        .about-container {
+            flex: 1;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .about-container h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #1e90ff;
+        }
+
+        .about-container p {
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .about-container img {
+            max-width: 100%;
+            height: auto;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Social Section */
+        .social-section {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .social-section .name {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .social-section .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #1e90ff;
+            color: #fff;
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .social-section .social-icon:hover {
+            background: #1474cc;
+        }
+
+        /* Mobile Navigation Bar */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #1e1e1e;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .mobile-nav a {
+            color: #f0f0f0;
+            text-decoration: none;
+            font-size: 1.5rem;
+        }
+
+        .mobile-nav a:hover {
+            color: #1e90ff;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                display: none; /* Hide the top nav on mobile view */
+            }
+
+            .mobile-nav {
+                display: flex; /* Show the bottom nav in mobile view */
+            }
+
+            .about-container {
+                padding: 10px;
+            }
+
+            .about-container h1 {
+                font-size: 2rem;
+            }
+
+            .about-container p {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-nav {
+                display: none; /* Hide the bottom nav on web view */
+            }
+
+            .navbar {
+                display: flex; /* Show the top nav in web view */
+            }
+        }
+        
+/* Remove blue touch overlay and focus outline */
+button, input, textarea, a, div {
+    outline: none; /* Remove outline for focus */
+    -webkit-tap-highlight-color: transparent; /* Remove blue highlight */
+    -webkit-touch-callout: none; /* Prevent callout (iOS long press) */
+    user-select: none; /* Prevent text selection */
+}
+
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="#" class="logo">Study Nepal</a>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="chat/index.html">Chat</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+    </nav>
+
+    <!-- About Section -->
+    <div id="about" class="about-container">
+        <h1>About Our App</h1>
+        <p>
+            More than 90% of the materials are used from the<br>
+            <strong>Curriculum Development Centre</strong>
+        </p>
+        <p>
+            <a href="https://moecdc.gov.np" style="color: #1e90ff; text-decoration: none;" target="_blank">
+                https://moecdc.gov.np
+            </a>
+        </p>
+        <img src="https://ceotab.com/wp-content/uploads/2020/07/cdc-ceotab.jpg" alt="Curriculum Development Centre Logo">
+        <p>
+            Our app provides easy access to educational resources, guides, and materials to help students excel in their studies.
+        </p>
+    </div>
+
+    <!-- Social Section -->
+    <div class="social-section" id="contact">
+        <div class="name">Prabesh Dahal</div>
+        <a href="https://facebook.com" target="_blank" class="social-icon" title="Facebook">
+            &#xf09a; <!-- FontAwesome Facebook Icon -->
+        </a>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <!-- Mobile Navigation Bar -->
+    <div class="mobile-nav">
+        <a href="index.html" title="Home">&#8962;</a>
+        <a href="chat/index.html" title="Chat">&#128172;</a>
+        <a href="about.html" title="About">&#9881;</a>
+    </div>
+</body>
+</html>

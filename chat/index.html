@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chatbot - Dark Theme</title>
+  <style>
+    
+/* Remove blue touch overlay and focus outline */
+button, input, textarea, a, div {
+    outline: none; /* Remove outline for focus */
+    -webkit-tap-highlight-color: transparent; /* Remove blue highlight */
+    -webkit-touch-callout: none; /* Prevent callout (iOS long press) */
+    user-select: none; /* Prevent text selection */
+}
+
+    /* General Body Styling */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #181818;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      overflow: hidden; /* Prevent overflow */
+      height: 100vh;
+    }
+
+    /* Fullscreen Chat Container */
+    #chat-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      display: block;
+      opacity: 0; /* Initially hidden */
+      transition: opacity 0.5s ease-in-out; /* Smooth fade-in transition */
+    }
+
+    /* iframe styling */
+    iframe {
+      width: 100%;
+      height: 100%; /* Takes up the entire height */
+      border: none;
+      border-radius: 0;
+    }
+
+    /* Navigation Bar */
+    .nav-bar {
+      background-color: #333;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 50px;
+      z-index: 1001;
+      box-sizing: border-box;
+    }
+
+    .nav-bar .logo {
+      height: 30px; /* Adjust height as needed */
+    }
+
+    .nav-bar .bot-name {
+      font-size: 16px;
+      font-weight: normal;
+      text-align: center;
+      flex-grow: 1;
+      text-align: center;
+    }
+
+    .nav-bar .close-btn {
+      font-size: 20px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: #fff;
+    }
+
+    .nav-bar .close-btn:hover {
+      color: #f44336; /* Red color for hover effect */
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 767px) {
+      .nav-bar {
+        padding: 8px 15px;
+        font-size: 14px;
+        height: 45px;
+      }
+
+      .nav-bar .logo {
+        height: 25px; /* Adjust height for mobile */
+      }
+
+      .nav-bar .bot-name {
+        font-size: 14px;
+      }
+
+      .nav-bar .close-btn {
+        font-size: 18px;
+      }
+
+      iframe {
+        height: calc(100% - 45px); /* Adjust height to leave space for the nav bar on mobile */
+      }
+    }
+
+    @media (max-width: 480px) {
+      /* Smaller screens (smartphones) */
+      .nav-bar {
+        font-size: 12px;
+        padding: 5px 10px;
+        height: 40px;
+      }
+
+      .nav-bar .logo {
+        height: 20px; /* Adjust height for small screens */
+      }
+
+      .nav-bar .bot-name {
+        font-size: 12px;
+      }
+
+      .nav-bar .close-btn {
+        font-size: 16px;
+      }
+
+      iframe {
+        height: calc(100% - 40px); /* Adjust height for small screens */
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <div class="nav-bar">
+    <img src="../img\logo\logo.png" alt="Study Nepal Logo" class="logo">
+    <div class="bot-name">Bot</div>
+    <button class="close-btn" onclick="closeChat()">×</button>
+  </div>
+
+  <!-- Full Screen Chat Container -->
+  <div id="chat-container">
+    <iframe id="chat-frame" src="https://cdn.botpress.cloud/webchat/v2.2/shareable.html?configUrl=https://files.bpcontent.cloud/2024/12/16/06/20241216064028-9BXRQXH9.json"></iframe>
+  </div>
+
+  <script>
+    const botId = 'your-bot-id'; // Replace with your actual bot ID
+    let conversationId = null;
+
+    // Function to close the chat container
+    function closeChat() {
+      document.getElementById('chat-container').style.opacity = 0;
+      setTimeout(function() {
+        document.getElementById('chat-container').style.display = 'none';
+        clearChatHistory(); // Clear chat history when the close button is clicked
+        window.location.href = '../index.html'; // Redirect to main page
+      }, 500); // Hide the chat after the fade-out transition
+    }
+
+    // Function to clear chat history
+    function clearChatHistory() {
+      if (conversationId) {
+        fetch(`https://your-botpress-server/api/v1/bots/${botId}/conversations/${conversationId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer your-auth-token' // Add your auth token if needed
+          }
+        }).then(response => {
+          if (response.ok) {
+            console.log('Chat history cleared successfully.');
+          } else {
+            console.error('Failed to clear chat history.');
+          }
+        }).catch(error => {
+          console.error('Error clearing chat history:', error);
+        });
+      }
+    }
+
+    // Function to open the chat container with animation
+    function openChat() {
+      const chatContainer = document.getElementById('chat-container');
+      chatContainer.style.display = 'block';
+      setTimeout(function() {
+        chatContainer.style.opacity = 1; // Show the chat with fade-in effect
+      }, 10); // A small timeout to allow the display property to take effect
+    }
+
+    // Function to retrieve the current conversation ID from Botpress
+    function getConversationId() {
+      fetch(`https://your-botpress-server/api/v1/bots/${botId}/conversations`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer your-auth-token' // Add your auth token if needed
+        }
+      }).then(response => response.json()).then(data => {
+        if (data && data.length > 0) {
+          conversationId = data[0].id; // Assuming the latest conversation is the first in the list
+        }
+      }).catch(error => {
+        console.error('Error retrieving conversation ID:', error);
+      });
+    }
+
+    // Open chat on page load and get the conversation ID
+    window.onload = function() {
+      openChat();
+      getConversationId();
+    };
+
+    // Clear chat history when the window is closed or refreshed
+    window.addEventListener('beforeunload', clearChatHistory);
+  </script>
+</body>
+</html>

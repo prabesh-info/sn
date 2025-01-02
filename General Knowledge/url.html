@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Viewer</title>
+    <style>
+        
+/* Remove blue touch overlay and focus outline */
+button, input, textarea, a, div {
+    outline: none; /* Remove outline for focus */
+    -webkit-tap-highlight-color: transparent; /* Remove blue highlight */
+    -webkit-touch-callout: none; /* Prevent callout (iOS long press) */
+    user-select: none; /* Prevent text selection */
+}
+
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        /* Header Styling */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background-color: #1e1e1e;
+            border-bottom: 1px solid #333;
+            box-sizing: border-box;
+        }
+
+        /* App Name Styling */
+        .app-name {
+            color: #00d4ff;
+            font-size: 1.5rem;
+            margin: 0;
+            flex: 0 0 auto; /* Prevent stretching */
+        }
+
+        /* Search Box Styling */
+        .search-box {
+            flex: 1;
+            text-align: center;
+        }
+
+        .search-box input {
+            width: 80%;
+            max-width: 500px;
+            padding: 6px 10px;
+            text-align: center;
+            border: 1px solid #333;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            border-radius: 4px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        /* Close Button Styling */
+        .close {
+            background: none;
+            border: none;
+            color: #ff4d4d;
+            font-size: 1.5rem;
+            cursor: pointer;
+            flex: 0 0 auto; /* Prevent stretching */
+        }
+
+        .close:hover {
+            color: #ff1a1a;
+        }
+
+        /* Article Frame Styling */
+        iframe {
+            width: 100%;
+            height: calc(100vh - 60px); /* Adjust height to fill the remaining viewport */
+            border: none;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .app-name {
+                font-size: 1.2rem; /* Reduce font size for smaller screens */
+            }
+
+            .close {
+                font-size: 1.2rem; /* Adjust close icon size */
+            }
+
+            .search-box input {
+                width: 90%; /* Slightly expand input box width for smaller devices */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <div class="app-name">Study Nepal</div>
+        <div class="search-box">
+            <input type="text" id="urlDisplay" readonly>
+        </div>
+        <button class="close" onclick="goBack()">&times;</button>
+    </div>
+
+    <!-- Article Display Section -->
+    <iframe id="articleFrame" src=""></iframe>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Go back to the main page
+        function goBack() {
+            window.location.href = "index.html"; // Adjust the URL if needed
+        }
+
+        // Retrieve and display the article
+        const params = new URLSearchParams(window.location.search);
+        const article = params.get('article');
+
+        if (article) {
+            const articleURL = `https://en.wikipedia.org/wiki/${article}`;
+            document.getElementById('urlDisplay').value = articleURL;
+            document.getElementById('articleFrame').src = articleURL;
+        } else {
+            document.body.innerHTML = '<p style="text-align: center; padding: 20px;">Error loading article. Please go back and try again.</p>';
+        }
+    </script>
+</body>
+</html>

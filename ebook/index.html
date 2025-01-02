@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class E-Books Library</title>
+    <style>
+        /* Remove blue touch overlay and focus outline */
+        button,
+        input,
+        textarea,
+        a,
+        div {
+            outline: none;
+            /* Remove outline for focus */
+            -webkit-tap-highlight-color: transparent;
+            /* Remove blue highlight */
+            -webkit-touch-callout: none;
+            /* Prevent callout (iOS long press) */
+            user-select: none;
+            /* Prevent text selection */
+        }
+
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        .title {
+            text-align: center;
+            color: #bb86fc;
+            margin: 20px 0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .grid-item {
+            text-align: center;
+            padding: 15px;
+            background-color: #1f1f1f;
+            color: #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            aspect-ratio: 1 / 1;
+            /* Ensures a square aspect ratio */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            /* Modern font */
+            font-weight: 600;
+        }
+
+        .grid-item:hover {
+            background-color: #333333;
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .grid-item span.emoji {
+            font-size: 2.5em;
+            margin-bottom: 8px;
+        }
+
+        .grid-item:hover .emoji {
+            transform: scale(1.2);
+            /* Slight animation for emoji */
+            transition: all 0.3s ease;
+        }
+
+        .grid-item::after {
+            content: attr(data-class);
+            /* Dynamic class name text */
+            font-size: 1.2em;
+            color: #bb86fc;
+            /* Gradient or vivid color */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-top: 10px;
+        }
+
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .popup.hidden {
+            display: none;
+        }
+
+        .popup-content {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+        }
+
+        .popup-content h2 {
+            margin: 0 0 20px;
+            color: #bb86fc;
+        }
+
+        .popup-content ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .popup-content li {
+            margin: 10px 0;
+            font-size: 16px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 8px;
+        }
+
+        .popup-content li:last-child {
+            border-bottom: none;
+        }
+
+        .popup-content a {
+            text-decoration: none;
+            color: #03dac6;
+            font-weight: bold;
+        }
+
+        .popup-content a:hover {
+            text-decoration: underline;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            color: #e0e0e0;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #bb86fc;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .grid-item {
+                padding: 10px;
+            }
+
+            .popup-content {
+                width: 95%;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid-container {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+
+            .popup-content {
+                font-size: 14px;
+            }
+
+            .popup-content h2 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav
+        style="display: flex; justify-content: space-between; align-items: center; background-color: #1f1f1f; color: #e0e0e0; padding: 10px 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4); font-family: 'Poppins', sans-serif; font-weight: 600;">
+        <div style="font-size: 1.2em; color: #bb86fc;">Study Nepal</div>
+        <div onclick="window.location.href='../index.html'"
+            style="font-size: 1.5em; cursor: pointer; color: #e0e0e0;" onmouseover="this.style.color='#bb86fc'"
+            onmouseout="this.style.color='#e0e0e0'">
+            &times;
+        </div>
+    </nav>
+    <h1 class="title">Class E-Books Library</h1>
+    <div class="grid-container">
+        <div class="grid-item" data-class="Class 1" onclick="showPopup('Class 1')">
+            <span class="emoji">📘</span>
+        </div>
+        <div class="grid-item" data-class="Class 2" onclick="showPopup('Class 2')">
+            <span class="emoji">📗</span>
+        </div>
+        <div class="grid-item" data-class="Class 3" onclick="showPopup('Class 3')">
+            <span class="emoji">📕</span>
+        </div>
+        <div class="grid-item" data-class="Class 4" onclick="showPopup('Class 4')">
+            <span class="emoji">📙</span>
+        </div>
+        <div class="grid-item" data-class="Class 5" onclick="showPopup('Class 5')">
+            <span class="emoji">📓</span>
+        </div>
+        <div class="grid-item" data-class="Class 6" onclick="showPopup('Class 6')">
+            <span class="emoji">📔</span>
+        </div>
+        <div class="grid-item" data-class="Class 7" onclick="showPopup('Class 7')">
+            <span class="emoji">📒</span>
+        </div>
+        <div class="grid-item" data-class="Class 8" onclick="showPopup('Class 8')">
+            <span class="emoji">📖</span>
+        </div>
+        <div class="grid-item" data-class="Class 9" onclick="showPopup('Class 9')">
+            <span class="emoji">📚</span>
+        </div>
+        <div class="grid-item" data-class="Class 10" onclick="showPopup('Class 10')">
+            <span class="emoji">📜</span>
+        </div>
+        <div class="grid-item" data-class="Class 11" onclick="showPopup('Class 11')">
+            <span class="emoji">📚</span>
+        </div>
+        <div class="grid-item" data-class="Class 12" onclick="showPopup('Class 12')">
+            <span class="emoji">📓</span>
+        </div>
+    </div>
+
+    <div id="popup" class="popup hidden">
+        <div class="popup-content">
+            <span class="close" onclick="hidePopup()">&times;</span>
+            <h2 id="popup-title"></h2>
+            <ul id="subjects"></ul>
+        </div>
+    </div>
+
+    <script>
+    
+const classData = {
+   "Class 1": [
+    { "name": "Asmakam Sanskritam Grade 1", "path": "Class 1/Asmakam Sanskritam Grade 1.pdf" },
+    { "name": "Bhot Language Grade 1", "path": "Class 1/Bhot Language Grade 1.pdf" },
+    { "name": "Hamro Serophero Grade 1", "path": "Class 1/Hamro Serophero Grade 1.pdf" },
+    { "name": "Mero English Grade 1", "path": "Class 1/Mero English Grade 1.pdf" },
+    { "name": "Mero Ganit Grade 1", "path": "Class 1/Mero Ganit Grade 1.pdf" },
+    { "name": "Mero Nepali Grade 1", "path": "Class 1/Mero Nepali Grade 1.pdf" },
+    { "name": "My Mathematics (Self-Learning Material) Grade 1 (Nepali Edition)", "path": "Class 1/My Mathematics (Self-Learning Material) Grade 1 (Nepali Edition).pdf" },
+    { "name": "My Mathematics - Grade 1 (English Translation)", "path": "Class 1/My Mathematics - Grade 1 (English Translation).pdf" },
+    { "name": "Teaching resources for learning Nepali as a second language", "path": "Class 1/Teaching resources for learning Nepali as a second language.pdf" }
+],
+
+    "Class 2": [
+        { name: "Asmakam Sanskritam Grade 2", path: "Class 2/Asmakam Sanskritam Grade 2.pdf" },
+        { name: "Bhot Language Grade 2", path: "Class 2/Bhot Language Grade 2.pdf" },
+        { name: "Hamro Serofero Grade 2", path: "Class 2/Hamro Serofero Grade 2.pdf" },
+        { name: "Mero Nepali Grade 2", path: "Class 2/Mero Nepali Grade 2.pdf" },
+        { name: "My English Grade 2", path: "Class 2/My English Grade 2.pdf" },
+        { name: "My Mathematics (Self-Learning Material) Grade 2 (Nepali Edition)", path: "Class 2/My Mathematics (Self-Learning Material) Grade 2 (Nepali Edition).pdf" },
+        { name: "My Mathematics - Grade 2 (English Translation)", path: "Class 2/My Mathematics - Grade 2 (English Translation).pdf" },
+        { name: "My Mathematics Grade 2 (Nepali Edition)", path: "Class 2/My Mathematics Grade 2 (Nepali Edition).pdf" }
+    ],
+    "Class 3": [
+        { name: "Asmakam Sanskritam Grade 3", path: "Class 3/Asmakam Sanskritam Grade 3.pdf" },
+        { name: "Bhot Language Grade 3", path: "Class 3/Bhot Language Grade 3.pdf" },
+        { name: "Hamro Serofero Grade 3", path: "Class 3/Hamro Serofero Grade 3.pdf" },
+        { name: "Majhi Language Textbook Class 3", path: "Class 3/Majhi Language Textbook Class 3.pdf" },
+        { name: "Mero Nepali Grade 3", path: "Class 3/Mero Nepali Grade 3.pdf" },
+        { name: "My English Grade 3", path: "Class 3/My English Grade 3.pdf" },
+        { name: "My Mathematics (Self-Learning Material) Grade 3 (Nepali Medium)", path: "Class 3/My Mathematics (Self-Learning Material) Grade 3 (Nepali Medium).pdf" },
+        { name: "My Mathematics - Grade 3 (English Translation)", path: "Class 3/My Mathematics - Grade 3 (English Translation).pdf" },
+        { name: "My Mathematics Grade 3 (Nepali Edition)", path: "Class 3/My Mathematics Grade 3 (Nepali Edition).pdf" }
+    ],
+    "Class 4": [
+        { name: "Asmakam Sanskritam Grade 4", path: "Class 4/Asmakam Sanskritam Grade 4.pdf" },
+        { name: "Bhot Language Grade 4", path: "Class 4/Bhot Language Grade 4.pdf" },
+        { name: "Chepang Language Textbook Grade 4", path: "Class 4/Chepang Language Textbook Grade 4.pdf" },
+        { name: "English Grade 4", path: "Class 4/English Grade 4.pdf" },
+        { name: "Health, Physical and Creative Arts Grade 4 (English Version)", path: "Class 4/Health_ Physical and Creative Arts Grade 4 (English Version).pdf" },
+        { name: "Health, Physical and Creative Arts Grade 4", path: "Class 4/Health_ Physical and Creative Arts Grade 4.pdf" },
+        { name: "Khaling Language Textbook Grade 4", path: "Class 4/Khaling Language Textbook Grade 4.pdf" },
+        { name: "Mathematics Grade 4", path: "Class 4/Mathematics Grade 4.pdf" },
+        { name: "My Mathematics - Grade 4 (English Translation)", path: "Class 4/My Mathematics - Grade 4 (English Translation).pdf" },
+        { name: "Nepali Grade 4", path: "Class 4/Nepali Grade 4.pdf" },
+        { name: "Science and Technology Grade 4 (English Translation)", path: "Class 4/Science and Technology Grade 4 (English Translation).pdf" },
+        { name: "Science and Technology Grade 4", path: "Class 4/Science and Technology Grade 4.pdf" },
+        { name: "Social Studies and Human Value Education Grade 4", path: "Class 4/Social Studies and Human Value Education Grade 4.pdf" }
+    ],
+    "Class 5": [
+        { name: "Asmakam Sanskritam Grade 5", path: "Class 5/Asmakam Sanskritam Grade 5.pdf" },
+        { name: "Bhot Language Grade 5", path: "Class 5/Bhot Language Grade 5.pdf" },
+        { name: "Chepang Language Textbook Grade 5", path: "Class 5/Chepang Language Textbook Grade 5.pdf" },
+        { name: "English Grade 5", path: "Class 5/English Grade 5.pdf" },
+        { name: "Health, Physical and Creative Arts Grade 5 (Nepali Edition)", path: "Class 5/Health_ Physical and Creative Arts Grade 5 (Nepali Edition).pdf" },
+        { name: "Khaling Language Textbook Grade 5", path: "Class 5/Khaling Language Textbook Grade 5.pdf" },
+        { name: "Mathematics Grade 5 (English Translation)", path: "Class 5/Mathematics Grade 5 (English Translation).pdf" },
+        { name: "Maths Grade 5 (Nepali Edition)", path: "Class 5/Maths Grade 5 (Nepali Edition).pdf" },
+        { name: "Nepali Grade 5", path: "Class 5/Nepali Grade 5.pdf" },
+        { name: "Science and Technology Grade 5 (English Translation)", path: "Class 5/Science and Technology Grade 5 (English Translation).pdf" },
+        { name: "Science and Technology Grade 5 (Nepali Edition)", path: "Class 5/Science and Technology Grade 5 (Nepali Edition).pdf" },
+        { name: "Social Studies and Human Value Education Grade 5 (Nepali Edition)", path: "Class 5/Social Studies and Human Value Education Grade 5 (Nepali Edition).pdf" }
+    ],
+    "Class 6": [
+        { name: "Asmakam Sanskritam Grade 6", path: "Class 6/Asmakam Sanskritam Grade 6.pdf" },
+        { name: "English Grade 6", path: "Class 6/English Grade 6.pdf" },
+        { name: "Health, Physical and Creative Arts Grade 6 (English Translation)", path: "Class 6/Health_ Physical and Creative Arts Grade 6 (English Translation).pdf" },
+        { name: "Health, Physical and Creative Arts Grade 6", path: "Class 6/Health_ Physical and Creative Arts Grade 6.pdf" },
+        { name: "Karmakand Grade 6 (Gurukul)", path: "Class 6/Karmakand Grade 6 (Gurukul).pdf" },
+        { name: "Magar Language Textbook Grade 6", path: "Class 6/Magar Language Textbook Grade 6.pdf" },
+        { name: "Maths Grade 6 (Nepali Edition)", path: "Class 6/Maths Grade 6 (Nepali Edition).pdf" },
+        { name: "My Mathematics - Grade 6 (English Translation)", path: "Class 6/My Mathematics - Grade 6 (English Translation).pdf" },
+        { name: "Neetishastra Grade 6 (Gurukul)", path: "Class 6/Neetishastra Grade 6 (Gurukul).pdf" },
+        { name: "Nepali Grade 6", path: "Class 6/Nepali Grade 6.pdf" },
+        { name: "Practical Science and Technology Grade 6 (English Translation)", path: "Class 6/Practical Science and Technology Grade 6 (English Translation).pdf" },
+        { name: "Practical Science and Technology Grade 6", path: "Class 6/Practical Science and Technology Grade 6.pdf" },
+        { name: "Science and Technology Grade 6 (English Translation)", path: "Class 6/Science and Technology Grade 6 (English Translation).pdf" },
+        { name: "Social Studies Grade 6 (English Translation)", path: "Class 6/Social Studies Grade 6 (English Translation).pdf" },
+        { name: "Social Studies Grade 6", path: "Class 6/Social Studies Grade 6.pdf" },
+        { name: "Tamang Language Textbook Grade 6", path: "Class 6/Tamang Language Textbook Grade 6.pdf" },
+        { name: "Vyakran Grade 6 (Gurukul)", path: "Class 6/Vyakran Grade 6 (Gurukul).pdf" }
+    ],
+ "Class 7": [
+    { "name": "Asmakam Sanskritam Grade 7", "path": "Class 7/Asmakam Sanskritam Grade 7.pdf" },
+    { "name": "English Grade 7", "path": "Class 7/English Grade 7.pdf" },
+    { "name": "Health, Physical and Creative Arts Grade 7 (English Translation)", "path": "Class 7/Health_ Physical and Creative Arts Grade 7 (English Translation).pdf" },
+    { "name": "Health, Physical and Creative Arts Grade 7 (Nepali Edition)", "path": "Class 7/Health_ Physical and Creative Arts Grade 7 (Nepali Edition).pdf" },
+    { "name": "Karmakandah Grade 7 (Gurukul)", "path": "Class 7/Karmakandah Grade 7 (Gurukul).pdf" },
+    { "name": "Magar Language Textbook Grade 7", "path": "Class 7/Magar Language Textbook Grade 7.pdf" },
+    { "name": "Mathematics Grade 7 (English Translation) Part 1", "path": "Class 7/Mathematics Grade 7 (English Translation) Part 1.pdf" },
+    { "name": "Mathematics Grade 7 (English Translation) Part 2", "path": "Class 7/Mathematics Grade 7 (English Translation) Part 2.pdf" },
+    { "name": "Maths Grade 7 (Nepali Edition)", "path": "Class 7/Maths Grade 7 (Nepali Edition).pdf" },
+    { "name": "Neetishastram Grade 7 (Gurukul)", "path": "Class 7/Neetishastram Grade 7 (Gurukul).pdf" },
+    { "name": "Nepali Grade 7", "path": "Class 7/Nepali Grade 7.pdf" },
+    { "name": "Sanskrit Bhasha Grade 7 (Gurukul)", "path": "Class 7/Sanskrit Bhasha Grade 7 (Gurukul).pdf" },
+    { "name": "Sanskrit Grammar Grade 7", "path": "Class 7/Sanskrit Grammar Grade 7.pdf" },
+    { "name": "Science and Technology Grade 7 (English Translation)", "path": "Class 7/Science and Technology Grade 7 (English Translation).pdf" },
+    { "name": "Science and Technology Grade 7 (Nepali Edition)", "path": "Class 7/Science and Technology Grade 7 (Nepali Edition).pdf" },
+    { "name": "Social Studies and Human Value Education Grade 7 (Nepali Edition)", "path": "Class 7/Social Studies and Human Value Education Grade 7 (Nepali Edition).pdf" }
+],
+ "Class 8": [
+    { "name": "Asmakam Sanskritam Grade 8", "path": "Class 8/Asmakam Sanskritam Grade 8.pdf" },
+    { "name": "English Grade 8", "path": "Class 8/English Grade 8.pdf" },
+    { "name": "Health, Physical and Creative Arts Grade 8 (English Translation)", "path": "Class 8/Health_ Physical and Creative Arts Grade 8 (English Translation).pdf" },
+    { "name": "Health, Physical and Creative Arts Grade 8 (Nepali Edition)", "path": "Class 8/Health_ Physical and Creative Arts Grade 8 (Nepali Edition).pdf" },
+    { "name": "Karmakand Grade 8 (Gurukul)", "path": "Class 8/Karmakand Grade 8 (Gurukul).pdf" },
+    { "name": "Mathematics (English Translation) Class 8", "path": "Class 8/Mathematics (English Translation) Class 8.pdf" },
+    { "name": "Mathematics Grade 8 (Nepali Version)", "path": "Class 8/Mathematics Grade 8 (Nepali Version).pdf" },
+    { "name": "Nepali Grade 8", "path": "Class 8/Nepali Grade 8.pdf" },
+    { "name": "Nitishastra Grade 8 (Gurukul)", "path": "Class 8/Nitishastra Grade 8 (Gurukul).pdf" },
+    { "name": "Sanskrit Bhasha Grade 8 (Gurukul)", "path": "Class 8/Sanskrit Bhasha Grade 8 (Gurukul).pdf" },
+    { "name": "Sanskrit Grammar Grade 8 (Gurukul)", "path": "Class 8/Sanskrit Grammar Grade 8 (Gurukul).pdf" },
+    { "name": "Science and Technology Grade 8 (A) Nepali Version", "path": "Class 8/Science and Technology Grade 8 (A) Nepali Version.pdf" },
+    { "name": "Science and Technology Grade 8 (B) Nepali Version", "path": "Class 8/Science and Technology Grade 8 (B) Nepali Version.pdf" },
+    { "name": "Science and Technology Grade 8 (English Translation) (A)", "path": "Class 8/Science and Technology Grade 8 (English Translation) (A).pdf" },
+    { "name": "Science and Technology Grade 8 (English Translation) (B)", "path": "Class 8/Science and Technology Grade 8 (English Translation) (B).pdf" },
+    { "name": "Social Studies and Human Value Education Grade 8 (Nepali Edition)", "path": "Class 8/Social Studies and Human Value Education Grade 8 (Nepali Edition).pdf" }
+],
+ "Class 9": [
+    { "name": "Compulsory English Grade 9", "path": "Class 9/Compulsory English Grade 9.pdf" },
+    { "name": "Compulsory Mathematics Grade 9", "path": "Class 9/Compulsory Mathematics Grade 9.pdf" },
+    { "name": "Compulsory Nepali Grade 9", "path": "Class 9/Compulsory Nepali Grade 9.pdf" },
+    { "name": "Science and Technology Grade 9", "path": "Class 9/Science and Technology Grade 9.pdf" },
+    { "name": "Social Studies Grade 9", "path": "Class 9/Social Studies Grade 9.pdf" },
+    { "name": "Asmakam Sanskritam Grade 9", "path": "Class 9/Asmakam Sanskritam Grade 9.pdf" },
+    { "name": "Awadhi Language Textbook Grade 9", "path": "Class 9/Awadhi Language Textbook Grade 9.pdf" },
+    { "name": "Bhot Language Grade 9", "path": "Class 9/Bhot Language Grade 9.pdf" },
+    { "name": "Bouddha Education Grade 9 (Pali Medium)", "path": "Class 9/Bouddha Education Grade 9 (Pali Medium).pdf" },
+    { "name": "Compulsory Sanskrit Language Grammar Grade 9", "path": "Class 9/Compulsory Sanskrit Language Grammar Grade 9.pdf" },
+    { "name": "English Grade 9", "path": "Class 9/English Grade 9.pdf" },
+    { "name": "Karmakanda Grade 9 (Gurukul)", "path": "Class 9/Karmakanda Grade 9 (Gurukul).pdf" },
+    { "name": "Mathematics Grade 9 (English Translation) Part 1", "path": "Class 9/Mathematics Grade 9 (English Translation) Part 1.pdf" },
+    { "name": "Mathematics Grade 9 (English Translation) Part 2", "path": "Class 9/Mathematics Grade 9 (English Translation) Part 2.pdf" },
+    { "name": "Maths Grade 9 (Nepali Version)", "path": "Class 9/Maths Grade 9 (Nepali Version).pdf" },
+    { "name": "Nepali Grade 9", "path": "Class 9/Nepali Grade 9.pdf" },
+    { "name": "Sanskrit Byakaranam Grade 9 (Gurukul)", "path": "Class 9/Sanskrit Byakaranam Grade 9 (Gurukul).pdf" },
+    { "name": "Sanskrit Sahityam Grade 9 (Gurukul)", "path": "Class 9/Sanskrit Sahityam Grade 9 (Gurukul).pdf" },
+    { "name": "Science and Technology Grade 9 (English Translation)", "path": "Class 9/Science and Technology Grade 9 (English Translation).pdf" },
+    { "name": "Science and Technology Grade 9 (Nepali Version)", "path": "Class 9/Science and Technology Grade 9 (Nepali Version).pdf" },
+    { "name": "Social Studies Grade 9 (Nepali Version)", "path": "Class 9/Social Studies Grade 9 (Nepali Version).pdf" }
+],
+ "Class 10": [
+        { "name": "Awadhi Language Textbook Grade 10", "path": "Class 10/Awadhi Language Textbook Grade 10.pdf" },
+        { "name": "Bhot Language Grade 10", "path": "Class 10/Bhot Language Grade 10.pdf" },
+        { "name": "Bouddha Education Grade 10", "path": "Class 10/Bouddha Education Grade 10.pdf" },
+        { "name": "Compulsory Sanskrit Language Grammar Grade 10", "path": "Class 10/Compulsory Sanskrit Language Grammar Grade 10.pdf" },
+        { "name": "English Grade 10", "path": "Class 10/English Grade 10.pdf" },
+        { "name": "Karmakand Grade 10 (Gurukul)", "path": "Class 10/Karmakand Grade 10 (Gurukul).pdf" },
+        { "name": "Maithali Language Textbook Grade 10", "path": "Class 10/Maithali Language Textbook Grade 10.pdf" },
+        { "name": "Mathematics Grade 10 (English Translation) Part 1", "path": "Class 10/Mathematics Grade 10 (English Translation) Part 1.pdf" },
+        { "name": "Mathematics Grade 10 (English Translation) Part 2", "path": "Class 10/Mathematics Grade 10 (English Translation) Part 2.pdf" },
+        { "name": "Maths Grade 10 (Nepali Version)", "path": "Class 10/Maths Grade 10 (Nepali Version).pdf" },
+        { "name": "Nepali Grade 10", "path": "Class 10/Nepali Grade 10.pdf" },
+        { "name": "Science and Technology Grade 10 (English Translation) Part A", "path": "Class 10/Science and Technology Grade 10 (English Translation) Part A.pdf" },
+        { "name": "Science and Technology Grade 10 (English Translation) Part B", "path": "Class 10/Science and Technology Grade 10 (English Translation) Part B.pdf" },
+        { "name": "Science and Technology Grade 10 (English Translation) Part C", "path": "Class 10/Science and Technology Grade 10 (English Translation) Part C.pdf" },
+        { "name": "Science and Technology Grade 10", "path": "Class 10/Science and Technology Grade 10.pdf" },
+        { "name": "Social Studies Grade 10", "path": "Class 10/Social Studies Grade 10.pdf" }
+    ],
+    "Class 11": [
+        { "name": "Bhot Language Grade 11", "path": "Class 11/Bhot Language Grade 11.pdf" },
+        { "name": "Bouddha Education Grade 11", "path": "Class 11/Bouddha Education Grade 11.pdf" },
+        { "name": "Bouddha Philosophy Grade 11", "path": "Class 11/Bouddha Philosophy Grade 11.pdf" },
+        { "name": "English Grade 11", "path": "Class 11/English Grade 11.pdf" },
+        { "name": "Nepali Grade 11", "path": "Class 11/Nepali Grade 11.pdf" },
+        { "name": "Sanskrit Bhasha Byakaranam Grade 11 (Gurukul)", "path": "Class 11/Sanskrit Bhasha Byakaranam Grade 11 (Gurukul).pdf" },
+        { "name": "Sanskrit Rachana Grade 11 (Gurukul)", "path": "Class 11/Sanskrit Rachana Grade 11 (Gurukul).pdf" },
+        { "name": "Social Studies and Life Skills Education Grade 11 (Nepali Version)", "path": "Class 11/Social Studies and Life Skills Education Grade 11 (Nepali Version).pdf" }
+    ],
+    "Class 12": [
+        { "name": "Bhot Language Grade 12 (1)", "path": "Class 12/Bhot Language Grade 12 (1).pdf" },
+        { "name": "Bhot Language Grade 12 (2)", "path": "Class 12/Bhot Language Grade 12 (2).pdf" },
+        { "name": "Buddha Education Grade 12 (Pali Medium)", "path": "Class 12/Buddha Education Grade 12 (Pali Medium).pdf" },
+        { "name": "Buddhist Philosophy Grade 12 (Pali Medium)", "path": "Class 12/Buddhist Philosophy Grade 12 (Pali Medium).pdf" },
+        { "name": "English Grade 12", "path": "Class 12/English Grade 12.pdf" },
+        { "name": "Nepali Grade 12", "path": "Class 12/Nepali Grade 12.pdf" },
+        { "name": "Sanskrit Grammar Grade 12", "path": "Class 12/Sanskrit Grammar Grade 12.pdf" },
+        { "name": "Social Studies and Life Skills Education Grade 12 (Nepali Version)", "path": "Class 12/Social Studies and Life Skills Education Grade 12 (Nepali Version).pdf" }
+    ]
+};
+
+
+function showPopup(className) {
+    const subjectsList = document.getElementById('subjects');
+    const popupTitle = document.getElementById('popup-title');
+    popupTitle.innerText = `${className} E-Books`;
+    subjectsList.innerHTML = '';
+
+    classData[className].forEach(subject => {
+        const listItem = document.createElement('li');
+        const link = document.createElement('a');
+
+        // Pass PDF path to pdfviewer.html as a query parameter
+        link.href = `pdfviewer.html?pdf=${encodeURIComponent(subject.path)}`;
+        link.target = '_self'; // Open in the same tab
+        link.innerText = subject.name;
+
+        listItem.appendChild(link);
+        subjectsList.appendChild(listItem);
+    });
+
+    document.getElementById('popup').classList.remove('hidden');
+}
+
+function hidePopup() {
+    document.getElementById('popup').classList.add('hidden');
+}
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curriculum</title>
+    <style>
+        /* Remove blue touch overlay and focus outline */
+        button,
+        input,
+        textarea,
+        a,
+        div {
+            outline: none;
+            /* Remove outline for focus */
+            -webkit-tap-highlight-color: transparent;
+            /* Remove blue highlight */
+            -webkit-touch-callout: none;
+            /* Prevent callout (iOS long press) */
+            user-select: none;
+            /* Prevent text selection */
+        }
+
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        .title {
+            text-align: center;
+            color: #bb86fc;
+            margin: 20px 0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .grid-item {
+            text-align: center;
+            padding: 15px;
+            background-color: #1f1f1f;
+            color: #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            aspect-ratio: 1 / 1;
+            /* Ensures a square aspect ratio */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            /* Modern font */
+            font-weight: 600;
+        }
+
+        .grid-item:hover {
+            background-color: #333333;
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .grid-item span.emoji {
+            font-size: 2.5em;
+            margin-bottom: 8px;
+        }
+
+        .grid-item:hover .emoji {
+            transform: scale(1.2);
+            /* Slight animation for emoji */
+            transition: all 0.3s ease;
+        }
+
+        .grid-item::after {
+            content: attr(data-class);
+            /* Dynamic class name text */
+            font-size: 1.2em;
+            color: #bb86fc;
+            /* Gradient or vivid color */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-top: 10px;
+        }
+
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .popup.hidden {
+            display: none;
+        }
+
+        .popup-content {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+        }
+
+        .popup-content h2 {
+            margin: 0 0 20px;
+            color: #bb86fc;
+        }
+
+        .popup-content ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .popup-content li {
+            margin: 10px 0;
+            font-size: 16px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 8px;
+        }
+
+        .popup-content li:last-child {
+            border-bottom: none;
+        }
+
+        .popup-content a {
+            text-decoration: none;
+            color: #03dac6;
+            font-weight: bold;
+        }
+
+        .popup-content a:hover {
+            text-decoration: underline;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            color: #e0e0e0;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #bb86fc;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .grid-item {
+                padding: 10px;
+            }
+
+            .popup-content {
+                width: 95%;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid-container {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+
+            .popup-content {
+                font-size: 14px;
+            }
+
+            .popup-content h2 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav
+        style="display: flex; justify-content: space-between; align-items: center; background-color: #1f1f1f; color: #e0e0e0; padding: 10px 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4); font-family: 'Poppins', sans-serif; font-weight: 600;">
+        <div style="font-size: 1.2em; color: #bb86fc;">Study Nepal</div>
+        <div onclick="window.location.href='../index.html'"
+            style="font-size: 1.5em; cursor: pointer; color: #e0e0e0;" onmouseover="this.style.color='#bb86fc'"
+            onmouseout="this.style.color='#e0e0e0'">
+            &times;
+        </div>
+    </nav>
+    <h1 class="title">Curriculum</h1>
+    <div class="grid-container">
+        <div class="grid-item" data-class="Class 1" onclick="showPopup('Class 1')">
+            <span class="emoji">📘</span>
+        </div>
+        <div class="grid-item" data-class="Class 2" onclick="showPopup('Class 2')">
+            <span class="emoji">📗</span>
+        </div>
+        <div class="grid-item" data-class="Class 3" onclick="showPopup('Class 3')">
+            <span class="emoji">📕</span>
+        </div>
+        <div class="grid-item" data-class="Class 4" onclick="showPopup('Class 4')">
+            <span class="emoji">📙</span>
+        </div>
+        <div class="grid-item" data-class="Class 5" onclick="showPopup('Class 5')">
+            <span class="emoji">📓</span>
+        </div>
+        <div class="grid-item" data-class="Class 6" onclick="showPopup('Class 6')">
+            <span class="emoji">📔</span>
+        </div>
+        <div class="grid-item" data-class="Class 7" onclick="showPopup('Class 7')">
+            <span class="emoji">📒</span>
+        </div>
+        <div class="grid-item" data-class="Class 8" onclick="showPopup('Class 8')">
+            <span class="emoji">📖</span>
+        </div>
+        <div class="grid-item" data-class="Class 9" onclick="showPopup('Class 9')">
+            <span class="emoji">📚</span>
+        </div>
+        <div class="grid-item" data-class="Class 10" onclick="showPopup('Class 10')">
+            <span class="emoji">📜</span>
+        </div>
+        <div class="grid-item" data-class="Class 11" onclick="showPopup('Class 11')">
+            <span class="emoji">📚</span>
+        </div>
+        <div class="grid-item" data-class="Class 12" onclick="showPopup('Class 12')">
+            <span class="emoji">📓</span>
+        </div>
+    </div>
+
+    <div id="popup" class="popup hidden">
+        <div class="popup-content">
+            <span class="close" onclick="hidePopup()">&times;</span>
+            <h2 id="popup-title"></h2>
+            <ul id="subjects"></ul>
+        </div>
+    </div>
+
+    <script>
+ const classData = {
+    "Class 1": [
+        { name: "No curriculum PDFs available", path: null }
+    ],
+    "Class 2": [
+        { name: "No curriculum PDFs available", path: null }
+    ],
+    "Class 3": [
+        { name: "No curriculum PDFs available", path: null }
+    ],
+    "Class 4": [
+        { name: "Basic Education Curriculum (Grade 4-5)", path: "Class 4/Basic Education Curriculum_ 2078 (Grade 4-5) Compulsory Subjects.pdf" }
+    ],
+    "Class 5": [
+        { name: "No curriculum PDFs available", path: null }
+    ],
+    "Class 6": [
+        { name: "Basic Education Curriculum (Part A)", path: "Class 6/Basic Education Curriculum_ 2077 (Grade 6-8) Compulsory Subjects - (A).pdf" },
+        { name: "Basic Education Curriculum (Part B)", path: "Class 6/Basic Education Curriculum_ 2077 (Grade 6-8) Compulsory Subjects - (B).pdf" }
+    ],
+    "Class 7": [
+        { name: "No curriculum PDFs available", path: null }
+    ],
+    "Class 8": [
+        { name: "Nepalbhasa Curriculum Basic Level (Grade 6-8)", path: "Class 8/Nepalbhasa Curriculum Basic Level Grade 6 - 8.pdf" }
+    ],
+    "Class 9": [
+        { name: "Agriculture Education Curriculum", path: "Class 9/Agriculture Education Curriculum Secondary Level Grade 9 and 10.pdf" },
+        { name: "Computer Science Curriculum", path: "Class 9/Computer Science Curriculum Secondary Level Grade 9 - 10.pdf" },
+        { name: "Economics Curriculum", path: "Class 9/Economics Curriculum Secondary Level Grade 9 and 10.pdf" },
+        { name: "Optional Mathematics Curriculum", path: "Class 9/Optional Mathematics Curriculum Secondary Level Grade 9 and 10.pdf" },
+        { name: "Compulsory Subjects (Grade 9-10)", path: "Class 9/Secondary Education Curriculum_ 2078 (Grade 9-10) Compulsory Subjects.pdf" }
+    ],
+    "Class 10": [
+        { name: "Optional Subjects Part One", path: "Class 10/Secondary Curriculum 2076 Grade 9-10 Part one (Optional Subject).pdf" },
+        { name: "Optional Subjects Part Two", path: "Class 10/Secondary Curriculum 2079 Grade 9-10 Part two (Optional Subject).pdf" },
+        { name: "Baudha Education (Optional Subject)", path: "Class 10/Secondary Curriculum 2079 Grade 9-10 Baudha Education (Optional Subject).pdf" },
+        { name: "Japanese Language (Optional Subject)", path: "Class 10/Secondary Curriculum 2079 Grade 9-10 Japanese Language (Optional Subject).pdf" }
+    ],
+    "Class 11": [
+        { name: "Mathematics Curriculum", path: "Class 11/Secondary Curriculum 2078 Grade 11-12 Mathematics (Optional Subject).pdf" },
+        { name: "Political Science Curriculum", path: "Class 11/Secondary Curriculum 2078 Grade 11-12 Political Science (Optional Subject).pdf" }
+    ],
+    "Class 12": [
+        { name: "No curriculum PDFs available", path: null }
+    ]
+};
+
+      
+
+function showPopup(className) {
+    const subjectsList = document.getElementById('subjects');
+    const popupTitle = document.getElementById('popup-title');
+    popupTitle.innerText = `${className} Curriculum`;
+    subjectsList.innerHTML = '';
+
+    classData[className].forEach(subject => {
+        const listItem = document.createElement('li');
+        const link = document.createElement('a');
+
+        // Pass PDF path to pdfviewer.html as a query parameter
+        link.href = `pdfviewer.html?pdf=${encodeURIComponent(subject.path)}`;
+        link.target = '_self'; // Open in the same tab
+        link.innerText = subject.name;
+
+        listItem.appendChild(link);
+        subjectsList.appendChild(listItem);
+    });
+
+    document.getElementById('popup').classList.remove('hidden');
+}
+
+function hidePopup() {
+    document.getElementById('popup').classList.add('hidden');
+}
+    </script>
+</body>
+
+</html>
