@@ -1,75 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Viewer</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-        nav {
-            background-color: #004d99;
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            margin-left: 15px;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
-        #pdf-viewer-container {
-            flex: 1;
-        }
-        iframe {
-            border: none;
-            width: 100%;
-            height: 100%;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive PDF Viewer (Fit to Page)</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      height: 100vh;
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: Arial, sans-serif;
+      overflow: hidden; /* Hide scrollbars */
+    }
+
+    header, footer {
+      width: 100%;
+      background-color: #1f1f1f;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #e0e0e0;
+    }
+
+    header img {
+      height: 40px;
+    }
+
+    header h1, footer span {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    #pdf-container {
+      flex: 1;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #pdf-canvas {
+      width: fit-content;
+      height: fit-content;
+      border: 1px solid #444;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    footer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    footer button {
+      background-color: #bb86fc;
+      border: none;
+      padding: 10px 20px;
+      color: #fff;
+      font-size: 14px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    footer button:hover {
+      background-color: #9335e8;
+    }
+
+    footer input {
+      width: 50px;
+      padding: 5px;
+      text-align: center;
+      border: 1px solid #444;
+      border-radius: 5px;
+      background-color: #333;
+      color: #fff;
+    }
+
+    footer input:focus {
+      outline: none;
+      border-color: #bb86fc;
+    }
+  </style>
 </head>
 <body>
-    <nav>
-        <div>
-            <span style="font-size: 1.5em; font-weight: bold;">Study Nepal</span>
-        </div>
-        <div>
-            <a href="index.html">Home</a>
-        </div>
-    </nav>
+<header>
+  <img src="../img/logo/logo.png" alt="App Logo" /> <!-- Replace with your logo URL -->
+  <h1>PDF Viewer</h1>
+</header>
 
-    <div id="pdf-viewer-container">
-        <iframe id="pdf-viewer-frame"></iframe>
-    </div>
+<div id="pdf-container">
+  <canvas id="pdf-canvas"></canvas>
+</div>
 
-    <script>
-        // Function to get the 'pdf' query parameter
-        function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
+<footer>
+  <button id="prev-page-footer">Previous</button>
+  Page <input type="number" id="page-input" min="1" value="1" /> of <span id="page-count">0</span>
+  <button id="next-page-footer">Next</button>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const pdfPath = urlParams.get('pdf');
+
+  if (!pdfPath) {
+    alert("No PDF file specified!");
+    throw new Error("PDF file not specified in the URL query parameter.");
+  }
+
+  const canvas = document.getElementById('pdf-canvas');
+  const ctx = canvas.getContext('2d');
+  let pdfDoc = null,
+      pageNum = 1,
+      pageRendering = false,
+      pageNumPending = null,
+      zoomLevel = 1,
+      initialPinchDistance = null;
+
+  const fitPageToViewport = (page) => {
+    const viewport = page.getViewport({ scale: zoomLevel });
+
+    // Calculate scale to fit page within the available container space
+    const containerWidth = canvas.parentElement.offsetWidth;
+    const containerHeight = canvas.parentElement.offsetHeight;
+
+    const scale = Math.min(
+      containerWidth / viewport.width,
+      containerHeight / viewport.height
+    );
+
+    return page.getViewport({ scale: zoomLevel * scale });
+  };
+
+  const renderPage = (num) => {
+    pageRendering = true;
+    pdfDoc.getPage(num).then((page) => {
+      const viewport = fitPageToViewport(page);
+
+      // Set canvas dimensions to match the viewport
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      const renderContext = {
+        canvasContext: ctx,
+        viewport: viewport,
+      };
+
+      page.render(renderContext).promise.then(() => {
+        pageRendering = false;
+        if (pageNumPending !== null) {
+          renderPage(pageNumPending);
+          pageNumPending = null;
         }
+      });
 
-        // Get the PDF path from the query parameter
-        const pdfPath = getQueryParam('pdf');
-        if (pdfPath) {
-            // Set the iframe src to display the PDF
-            const viewerFrame = document.getElementById('pdf-viewer-frame');
-            viewerFrame.src = decodeURIComponent(pdfPath);
-        } else {
-            document.getElementById('pdf-viewer-container').innerHTML = '<h1 style="text-align:center;">No PDF specified!</h1>';
-        }
-    </script>
+      document.getElementById('page-input').value = num;
+    }).catch((error) => {
+      console.error("Error rendering page:", error);
+    });
+  };
+
+  const queueRenderPage = (num) => {
+    if (pageRendering) {
+      pageNumPending = num;
+    } else {
+      renderPage(num);
+    }
+  };
+
+  document.getElementById('prev-page-footer').addEventListener('click', () => {
+    if (pageNum <= 1) {
+      return;
+    }
+    pageNum--;
+    queueRenderPage(pageNum);
+  });
+
+  document.getElementById('next-page-footer').addEventListener('click', () => {
+    if (pageNum >= pdfDoc.numPages) {
+      return;
+    }
+    pageNum++;
+    queueRenderPage(pageNum);
+  });
+
+  document.getElementById('page-input').addEventListener('change', (event) => {
+    const newPageNum = parseInt(event.target.value);
+    if (newPageNum >= 1 && newPageNum <= pdfDoc.numPages) {
+      pageNum = newPageNum;
+      queueRenderPage(pageNum);
+    } else {
+      event.target.value = pageNum; // Reset input to current page number if invalid
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    queueRenderPage(pageNum); // Rerender the page on resize for responsiveness
+  });
+
+  const handlePinchZoom = (event) => {
+    if (event.touches.length === 2) {
+      const touch1 = event.touches[0];
+      const touch2 = event.touches[1];
+
+      const distance = Math.sqrt(
+        Math.pow(touch2.pageX - touch1.pageX, 2) +
+        Math.pow(touch2.pageY - touch1.pageY, 2)
+      );
+
+      if (!initialPinchDistance) {
+        initialPinchDistance = distance;
+      } else {
+        const scaleChange = distance / initialPinchDistance;
+        zoomLevel = Math.min(Math.max(zoomLevel * scaleChange, 0.5), 3); // Restrict zoom levels
+        initialPinchDistance = distance;
+        queueRenderPage(pageNum);
+      }
+    }
+  };
+
+  const resetPinchZoom = () => {
+    initialPinchDistance = null;
+  };
+
+  canvas.addEventListener('touchstart', (event) => {
+    if (event.touches.length === 2) {
+      initialPinchDistance = null;
+      event.preventDefault();
+    }
+  });
+
+  canvas.addEventListener('touchmove', (event) => {
+    if (event.touches.length === 2) {
+      handlePinchZoom(event);
+      event.preventDefault();
+    }
+  });
+
+  canvas.addEventListener('touchend', resetPinchZoom);
+
+  pdfjsLib.getDocument(pdfPath).promise.then((pdfDoc_) => {
+    pdfDoc = pdfDoc_;
+    document.getElementById('page-count').textContent = pdfDoc.numPages;
+    renderPage(pageNum);
+  }).catch((error) => {
+    console.error("Error loading PDF:", error);
+  });
+</script>
 </body>
 </html>
